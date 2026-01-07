@@ -1,0 +1,40 @@
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --accent:#2563eb;
+  --border:#e6e9ee;
+}
+html,body,#root{height:100%;}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:#111827;
+}
+.login{
+  max-width:420px;
+  margin:48px auto;
+  background:var(--card);
+  padding:24px;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(15,23,42,0.08);
+}
+.login h2{margin:0 0 12px 0;font-size:20px}
+.input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-top:8px;font-size:14px}
+.btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+.btn.secondary{background:#f3f4f6;color:#111;border:1px solid var(--border)}
+.btn:disabled{opacity:0.6;cursor:default}
+.error{color:#b91c1c;margin-top:10px}
+
+.chat{display:flex;height:100vh;gap:12px;padding:12px}
+.chat-panel{flex:1;display:flex;flex-direction:column;background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(2,6,23,0.06)}
+.header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.messages{padding:16px;overflow:auto;flex:1;background:linear-gradient(180deg, transparent, rgba(0,0,0,0.02));}
+.message{margin-bottom:12px;padding:8px 10px;border-radius:8px}
+.message .meta{font-size:12px;color:var(--muted);margin-bottom:4px}
+.input-row{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.sidebar{width:220px}
+.sidebar .card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 4px 12px rgba(2,6,23,0.04)}
+.online-list{list-style:none;padding:0;margin:8px 0 0 0}
+.online-list li{padding:6px 8px;border-radius:6px;color:var(--muted)}

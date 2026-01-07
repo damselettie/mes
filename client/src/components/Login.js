@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-
-const SERVER = 'http:// 10.40.31.124:5000';
+import '../styles.css';
+import { SERVER } from '../config';
 
 export default function Login({ onLogin }) {
   const [name, setName] = useState('');
@@ -39,10 +39,11 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div style={{padding:20}}>
+    <div className="login">
       <h2>{mode === 'login' ? 'Zaloguj się' : 'Zarejestruj się'}</h2>
       <form onSubmit={submit}>
         <input
+          className="input"
           autoComplete="username"
           value={name}
           onChange={e => setName(e.target.value)}
@@ -50,6 +51,7 @@ export default function Login({ onLogin }) {
           disabled={loading}
         />
         <input
+          className="input"
           type="password"
           autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
           value={password}
@@ -57,19 +59,19 @@ export default function Login({ onLogin }) {
           placeholder="Hasło"
           disabled={loading}
         />
-        <div style={{marginTop:8}}>
-          <button type="submit" disabled={loading}>{loading ? 'Proszę czekać...' : (mode === 'login' ? 'Wejdź' : 'Zarejestruj')}</button>
+        <div style={{marginTop:8, display:'flex', gap:8}}>
+          <button className="btn" type="submit" disabled={loading}>{loading ? 'Proszę czekać...' : (mode === 'login' ? 'Wejdź' : 'Zarejestruj')}</button>
           <button
+            className="btn secondary"
             type="button"
             onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(null); }}
-            style={{marginLeft:8}}
             disabled={loading}
           >
             {mode === 'login' ? 'Utwórz konto' : 'Mam konto'}
           </button>
         </div>
       </form>
-      {error && <div style={{color:'red', marginTop:8}}>{error}</div>}
+      {error && <div className="error">{error}</div>}
     </div>
   );
 }

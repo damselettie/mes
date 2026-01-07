@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-
-const SERVER = 'http://10.40.31.124:5000';
+import '../styles.css';
+import { SERVER } from '../config';
 
 export default function Chat({ username, token, onLogout }) {
   const [messages, setMessages] = useState([]);
@@ -39,33 +39,33 @@ export default function Chat({ username, token, onLogout }) {
   }
 
   return (
-    <div style={{display:'flex',height:'100vh'}}>
-      <div style={{flex:1,display:'flex',flexDirection:'column',borderRight:'1px solid #ddd'}}>
-        <div style={{padding:10, borderBottom:'1px solid #eee', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+    <div className="chat">
+      <div className="chat-panel">
+        <div className="header">
           <div>Zalogowany jako: <b>{username}</b></div>
-          <div>
-            {onLogout && <button onClick={onLogout}>Wyloguj</button>}
-          </div>
+          <div>{onLogout && <button className="btn secondary" onClick={onLogout}>Wyloguj</button>}</div>
         </div>
-        <div ref={listRef} style={{flex:1, overflowY:'auto', padding:10}}>
+        <div ref={listRef} className="messages">
           {messages.map(m => (
-            <div key={m.id} style={{marginBottom:8}}>
-              <div style={{fontSize:12,color:'#555'}}>{m.username} · <span style={{fontSize:11,color:'#999'}}>{new Date(m.time).toLocaleTimeString()}</span></div>
+            <div key={m.id} className="message">
+              <div className="meta">{m.username} · <span style={{color:'var(--muted)'}}>{new Date(m.time).toLocaleTimeString()}</span></div>
               <div>{m.text}</div>
             </div>
           ))}
         </div>
-        <div style={{padding:10, borderTop:'1px solid #eee', display:'flex', gap:8}}>
-          <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==='Enter' && send()} style={{flex:1}} placeholder="Napisz wiadomość..." />
-          <button onClick={send}>Wyślij</button>
+        <div className="input-row">
+          <input className="input" value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==='Enter' && send()} placeholder="Napisz wiadomość..." />
+          <button className="btn" onClick={send}>Wyślij</button>
         </div>
       </div>
 
-      <div style={{width:220,padding:10}}>
-        <h4>Online</h4>
-        <ul>
-          {users.map((u, i) => <li key={i}>{u}</li>)}
-        </ul>
+      <div className="sidebar">
+        <div className="card">
+          <h4>Online</h4>
+          <ul className="online-list">
+            {users.map((u, i) => <li key={i}>{u}</li>)}
+          </ul>
+        </div>
       </div>
     </div>
   );

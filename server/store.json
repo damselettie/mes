@@ -1,4 +1,42 @@
 {
-  "messages": [],
-  "users": []
+  "messages": [
+    {
+      "id": "17677809218324c9s9eq",
+      "username": "q",
+      "text": "w",
+      "time": "2026-01-07T10:15:21.832Z"
+    },
+    {
+      "id": "1767781560752x6eqoxs",
+      "username": "Joost Klein",
+      "text": "e",
+      "time": "2026-01-07T10:26:00.752Z"
+    },
+    {
+      "id": "1767781565139ftsnp47",
+      "username": "q",
+      "text": "eqw",
+      "time": "2026-01-07T10:26:05.139Z"
+    },
+    {
+      "id": "17677815667123el6plo",
+      "username": "q",
+      "text": "qweqw",
+      "time": "2026-01-07T10:26:06.712Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "1767780919471b34bp0j",
+      "username": "q",
+      "passwordHash": "$2a$10$Bnw4IndsBHqFBuE9KzHrfOKHKq7A1lQzC0sfNDDFACFPVB9kfQ3wq",
+      "createdAt": "2026-01-07T10:15:19.471Z"
+    },
+    {
+      "id": "1767781557060xo3p1gi",
+      "username": "Joost Klein",
+      "passwordHash": "$2a$10$5BWPqHPGGzsKp9DfhbwT4...tTIUsJIE0szdFaXgRAMCZ5UREGnPG",
+      "createdAt": "2026-01-07T10:25:57.060Z"
+    }
+  ]
 }
