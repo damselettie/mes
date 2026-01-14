@@ -19,7 +19,10 @@ const io = new Server(server, {
 
 const online = {};
 
-// diagnostics
+/*
+opis do zdarzen obsługi błędów nieobsłużonych obietnic i wyjątków 
+@param {Error} err - reason
+*/
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err && (err.stack || err.message || err));
 });

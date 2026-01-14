@@ -4,7 +4,9 @@ const path = require('path');
 const STORE_FILE = path.join(__dirname, 'store.json');
 
 let store = { messages: [], users: [] };
-
+/*
+  opis funkcji zapisywania stanu do pliku store.json 
+*/
 function saveStore() {
   try {
     fs.writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), 'utf8');
