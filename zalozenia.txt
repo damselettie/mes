@@ -1,0 +1,7 @@
+1. Piszemy kod w NODE React. 
+2. Projekt ma być komunikatorem takim jak Messenger.
+3. Powinien posiadać logowanie użytkownika po stronie serwera, gdzie dane użytkownika zachowują się w pliku JSON.
+4. Projekt będzie miał możliwości zmiany motywu kolorystycznego całego komunikatora.
+5. Komunikator będzie zabezpieczony przed atakami i dane będą zabezpieczone ze strony klienta.
+6. Możliwość używania emotek oraz zamieszczenia plików
+7. Możliwość utworzenia pokoi w których możesz rozmawiać z grupą użytkowników dodając ich poprzez ich nazwe użytkownika
