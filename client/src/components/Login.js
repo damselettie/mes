@@ -19,11 +19,15 @@ export default function Login({ onLogin }) {
     }
     setLoading(true);
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
       const res = await fetch(`${SERVER}/${mode}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
       const data = await res.json().catch(()=>({}));
       if (!res.ok) {
         setError(data && data.error ? data.error : `Błąd: ${res.status}`);
@@ -31,7 +35,11 @@ export default function Login({ onLogin }) {
         if (onLogin) onLogin({ username: data.username, token: data.token });
       }
     } catch (err) {
-      setError('Brak połączenia z serwerem');
+      if (err.name === 'AbortError') {
+        setError('Timeout: Serwer nie odpowiada (10s)');
+      } else {
+        setError('Brak połączenia z serwerem');
+      }
       console.error('login error', err);
     } finally {
       setLoading(false);
@@ -40,7 +48,8 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="login">
-      <h2>{mode === 'login' ? 'Zaloguj się' : 'Zarejestruj się'}</h2>
+      <h2>{mode === 'login' ? 'Zaloguj się (^_^)' : 'Zarejestruj się (^_^)'} </h2>
+      <div className="sub">Miło Cię widzieć! uwu</div>
       <form onSubmit={submit}>
         <input
           className="input"

@@ -5,12 +5,26 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('./db');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// File upload setup
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+const storage = multer.diskStorage({
+  destination: uploadDir,
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -36,6 +50,16 @@ app.get('/messages', (req, res) => res.json(db.getMessages()));
 
 app.get('/users', (req, res) => {
   res.json(Object.values(online));
+});
+
+// Serve uploaded files
+app.use('/uploads', express.static(uploadDir));
+
+// File upload endpoint
+app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const fileUrl = `/uploads/${req.file.filename}`;
+  res.json({ url: fileUrl, filename: req.file.originalname });
 });
 
 app.post('/register', async (req, res) => {
@@ -88,6 +112,19 @@ io.on('connection', (socket) => {
     const username = socket.user && socket.user.username ? socket.user.username : 'Anon';
     const msg = db.addMessage({ username, text: payload.text });
     io.emit('message', msg);
+  });
+
+  socket.on('private_message', (payload) => {
+    if (!payload || !payload.to || !payload.text) return;
+    const from = socket.user && socket.user.username;
+    if (!from) return;
+    const msg = { id: Date.now(), from, to: payload.to, text: payload.text, time: new Date().toISOString() };
+    // Find socket of recipient
+    const recipientSocket = Object.keys(online).find(id => online[id] === payload.to);
+    if (recipientSocket) {
+      io.to(recipientSocket).emit('private_message', msg);
+      io.to(socket.id).emit('private_message', msg); // also send to sender
+    }
   });
 
   socket.on('disconnect', () => {
