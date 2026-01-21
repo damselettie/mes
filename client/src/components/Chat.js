@@ -15,9 +15,15 @@ export default function Chat({ username, token, onLogout }) {
   const [privateMessages, setPrivateMessages] = useState([]);
   const [pendingNotification, setPendingNotification] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'pink');
   const socketRef = useRef(null);
   const listRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const kaomojis = ['(≧ω≦)', '(⌒‿⌒)', '〜(꒪꒳꒪)〜', '(；ω；)', '(≧▽≦)', '♡(｡>ω<｡)', '(^_^)', ';_;', '<3', '٩(ˊᗜˋ*)و ♡', '(•‿•)', '(*^‿^*)', '（＾_＾）', '(✿◠‿◠)', '( ｡ •̀ ᴖ •́ ｡)', 'ʕ•ᴥ•ʔ', '(づ｡◕‿‿◕｡)づ', '૮(˶╥︿╥)ა'];
 
@@ -116,7 +122,19 @@ export default function Chat({ username, token, onLogout }) {
             {pendingNotification && <div style={{color: '#ff6b6b', fontWeight: 'bold', marginBottom: 8}}>📬 {pendingNotification}</div>}
             <div>Zalogowany jako: <b>{username}</b> {privateChat ? ` - Prywatny z ${privateChat}` : ' - Ogólny'} &lt;3 (^_^)</div>
           </div>
-          <div>{onLogout && <button className="btn secondary" onClick={onLogout}>Wyloguj ;_;</button>}</div>
+          <div className="header-controls">
+            <div className="theme-switcher">
+              {['pink', 'blue', 'red', 'green', 'yellow', 'black'].map(t => (
+                <button
+                  key={t}
+                  className={`theme-btn theme-${t} ${theme === t ? 'active' : ''}`}
+                  onClick={() => setTheme(t)}
+                  title={t}
+                />
+              ))}
+            </div>
+            {onLogout && <button className="btn secondary" onClick={onLogout}>Wyloguj ;_;</button>}
+          </div>
         </div>
         <div ref={listRef} className="messages">
           {currentMessages.map(m => (

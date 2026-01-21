@@ -6,12 +6,93 @@
   --border:#ffdce6;
   --soft:#ffeef8;
 }
+
+/* Pink Theme */
+[data-theme="pink"] {
+  --bg:#fff0f6;
+  --card:#fff6fb;
+  --muted:#ff6fb5;
+  --accent:#ff6fb5;
+  --border:#ffdce6;
+  --soft:#ffeef8;
+}
+
+[data-theme="pink"] body {
+  color: #ff6fb5;
+}
+
+[data-theme="pink"] .message .meta {
+  color: #ff6fb5;
+}
+
+[data-theme="pink"] .online-list li {
+  color: #ff6fb5;
+}
+
+/* Blue Theme */
+[data-theme="blue"] {
+  --bg:#e3f2fd;
+  --card:#f3f7fc;
+  --muted:#1976d2;
+  --accent:#2196f3;
+  --border:#bbdefb;
+  --soft:#e8f4fd;
+}
+
+/* Red Theme */
+[data-theme="red"] {
+  --bg:#ffebee;
+  --card:#fff5f6;
+  --muted:#c62828;
+  --accent:#f44336;
+  --border:#ffcdd2;
+  --soft:#ffebee;
+}
+
+/* Green Theme */
+[data-theme="green"] {
+  --bg:#e8f5e9;
+  --card:#f1f8f6;
+  --muted:#2e7d32;
+  --accent:#4caf50;
+  --border:#c8e6c9;
+  --soft:#f1f8f6;
+}
+
+/* Yellow Theme */
+[data-theme="yellow"] {
+  --bg:#fffde7;
+  --card:#fffef5;
+  --muted:#f57f17;
+  --accent:#fbc02d;
+  --border:#fff9c4;
+  --soft:#fffef5;
+}
+
+/* Black Theme */
+[data-theme="black"] {
+  --bg:#1a1a1a;
+  --card:#2d2d2d;
+  --muted:#c8b3ff;
+  --accent:#bb86fc;
+  --border:#404040;
+  --soft:#383838;
+}
+
+[data-theme="black"] body {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  color: #c8b3ff;
+}
+
+[data-theme="black"] .message .meta {
+  color: #c8b3ff;
+}
 html,body,#root{height:100%;}
 body{
   margin:0;
   font-family: 'Poppins', Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg, #fff6fb 0%, #fff0f6 100%);
-  color:#331833;
+  background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%);
+  color: var(--muted);
 }
 .login{
   max-width:420px;
@@ -23,25 +104,38 @@ body{
   border:1px solid var(--border);
 }
 .login h2{margin:0 0 8px 0;font-size:20px}
-.login .sub{font-size:13px;color:#b93d73;margin-top:6px}
-.input{width:100%;padding:12px 14px;border:1px solid rgba(255,111,181,0.2);border-radius:12px;margin-top:10px;font-size:14px;background:linear-gradient(180deg,#fff,#fff6fb)}
+.login .sub{font-size:13px;color:var(--muted);margin-top:6px}
+.input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;margin-top:10px;font-size:14px;background:var(--soft)}
 .btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:600}
-.btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(255,111,181,0.3)}
+.btn.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
 .btn:disabled{opacity:0.6;cursor:default}
 .error{color:#e11d48;margin-top:10px}
 
 .chat{display:flex;height:100vh;gap:18px;padding:18px}
 .chat-panel{flex:1;display:flex;flex-direction:column;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(217,70,239,0.06);border:1px solid var(--border)}
-.header{padding:14px 18px;border-bottom:1px dashed rgba(255,111,181,0.18);display:flex;justify-content:space-between;align-items:center}
-.messages{padding:18px;overflow:auto;flex:1;background:linear-gradient(180deg, transparent, rgba(255,111,181,0.02));}
-.message{margin-bottom:12px;padding:10px 12px;border-radius:12px;background:var(--soft);box-shadow:0 6px 10px rgba(255,111,181,0.03)}
-.message .meta{font-size:12px;color:#b63c6b;margin-bottom:6px}
-.input-row{padding:14px;border-top:1px dashed rgba(255,111,181,0.12);display:flex;gap:10px}
+.header{padding:14px 18px;border-bottom:1px dashed var(--border);display:flex;justify-content:space-between;align-items:center;}
+.header-controls{display:flex;gap:12px;align-items:center;}
+.theme-switcher{display:flex;gap:6px;align-items:center;}
+.theme-btn{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all 0.2s ease;}
+.theme-btn:hover{transform:scale(1.15);}
+.theme-btn.active{border-color:#333;box-shadow:0 0 8px rgba(0,0,0,0.3);}
+.theme-pink{background:linear-gradient(135deg, #ff6fb5, #ff9ec9);}
+.theme-blue{background:linear-gradient(135deg, #2196f3, #64b5f6);}
+.theme-red{background:linear-gradient(135deg, #f44336, #ef9a9a);}
+.theme-green{background:linear-gradient(135deg, #4caf50, #81c784);}
+.theme-yellow{background:linear-gradient(135deg, #fbc02d, #ffee58);}
+.theme-black{background:linear-gradient(135deg, #1a1a1a, #454545);}
+[data-theme="black"] .theme-btn.active{border-color:#bb86fc;box-shadow:0 0 12px rgba(187,134,252,0.5);}
+.messages{padding:18px;overflow:auto;flex:1;background:var(--soft);}
+.message{margin-bottom:12px;padding:10px 12px;border-radius:12px;background:var(--card);box-shadow:0 6px 10px rgba(0,0,0,0.03);word-break:break-word;overflow-wrap:break-word;}
+.message div:last-child{word-wrap:break-word;word-break:break-word;white-space:pre-wrap;max-width:100%;}
+.message .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+.input-row{padding:14px;border-top:1px dashed var(--border);display:flex;gap:10px}
 .input-row .input{border-radius:999px}
 .sidebar{width:220px}
 .sidebar .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 8px 20px rgba(255,111,181,0.04);border:1px solid var(--border)}
 .online-list{list-style:none;padding:0;margin:8px 0 0 0}
-.online-list li{padding:6px 8px;border-radius:8px;color:#b63c6b;background:linear-gradient(90deg, rgba(255,255,255,0.3), transparent)}
+.online-list li{padding:6px 8px;border-radius:8px;color:var(--muted);background:var(--soft)}
 
 /* Notification Popup Styles */
 .notification-popup {
@@ -73,6 +167,34 @@ body{
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.3);
   animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Theme-specific notifications */
+[data-theme="blue"] .notification-item {
+  background: linear-gradient(135deg, #2196f3 0%, #64b5f6 100%);
+  box-shadow: 0 10px 30px rgba(33, 150, 243, 0.3);
+}
+
+[data-theme="red"] .notification-item {
+  background: linear-gradient(135deg, #f44336 0%, #ef9a9a 100%);
+  box-shadow: 0 10px 30px rgba(244, 67, 54, 0.3);
+}
+
+[data-theme="green"] .notification-item {
+  background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);
+  box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+}
+
+[data-theme="yellow"] .notification-item {
+  background: linear-gradient(135deg, #fbc02d 0%, #ffee58 100%);
+  box-shadow: 0 10px 30px rgba(251, 192, 45, 0.3);
+  color: #333;
+}
+
+[data-theme="black"] .notification-item {
+  background: linear-gradient(135deg, #bb86fc 0%, #d4a5ff 100%);
+  box-shadow: 0 10px 30px rgba(187, 134, 252, 0.3);
+  color: #1a1a1a;
 }
 
 @keyframes popIn {
