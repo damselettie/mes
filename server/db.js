@@ -24,9 +24,10 @@ function loadStore() {
     const raw = fs.readFileSync(STORE_FILE, 'utf8');
     try {
       const parsed = JSON.parse(raw);
-      store = parsed || { messages: [], users: [] };
+      store = parsed || { messages: [], users: [], pendingMessages: [] };
       store.messages = store.messages || [];
       store.users = store.users || [];
+      store.pendingMessages = store.pendingMessages || [];
     } catch (parseErr) {
       console.error('store.json is invalid JSON, creating backup and resetting store:', parseErr);
       try {
@@ -36,7 +37,7 @@ function loadStore() {
       } catch (renameErr) {
         console.error('Failed to backup corrupted store.json:', renameErr);
       }
-      store = { messages: [], users: [] };
+      store = { messages: [], users: [], pendingMessages: [] };
       saveStore();
     }
   } catch (e) {
@@ -69,6 +70,10 @@ function findUser(username) {
   return store.users.find(u => u.username === username);
 }
 
+function getUsers() {
+  return store.users.slice();
+}
+
 function createUser({ username, passwordHash }) {
   if (findUser(username)) return null;
   const user = {
@@ -82,4 +87,30 @@ function createUser({ username, passwordHash }) {
   return user;
 }
 
-module.exports = { addMessage, getMessages, findUser, createUser };
+// pending messages (for offline users)
+function addPendingMessage({ to, from, text }) {
+  const msg = {
+    id: Date.now() + Math.random().toString(36).slice(2, 9),
+    to,
+    from,
+    text,
+    time: new Date().toISOString()
+  };
+  if (!store.pendingMessages) store.pendingMessages = [];
+  store.pendingMessages.push(msg);
+  saveStore();
+  return msg;
+}
+
+function getPendingMessages(username) {
+  if (!store.pendingMessages) store.pendingMessages = [];
+  return store.pendingMessages.filter(m => m.to === username);
+}
+
+function clearPendingMessages(username) {
+  if (!store.pendingMessages) store.pendingMessages = [];
+  store.pendingMessages = store.pendingMessages.filter(m => m.to !== username);
+  saveStore();
+}
+
+module.exports = { addMessage, getMessages, findUser, getUsers, createUser, addPendingMessage, getPendingMessages, clearPendingMessages };
