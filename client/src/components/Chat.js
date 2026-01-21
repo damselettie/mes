@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import '../styles.css';
 import { SERVER } from '../config';
 import EmojiPicker from 'emoji-picker-react';
+import Notification from './Notification';
 
 export default function Chat({ username, token, onLogout }) {
   const [messages, setMessages] = useState([]);
@@ -13,11 +14,12 @@ export default function Chat({ username, token, onLogout }) {
   const [privateChat, setPrivateChat] = useState(null); // username for private chat
   const [privateMessages, setPrivateMessages] = useState([]);
   const [pendingNotification, setPendingNotification] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const socketRef = useRef(null);
   const listRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const kaomojis = ['(≧ω≦)', '(⌒‿⌒)', '〜(꒪꒳꒪)〜', '(；ω；)', '(≧▽≦)', '♡(｡>ω<｡)', '(^_^)', ';_;', '<3'];
+  const kaomojis = ['(≧ω≦)', '(⌒‿⌒)', '〜(꒪꒳꒪)〜', '(；ω；)', '(≧▽≦)', '♡(｡>ω<｡)', '(^_^)', ';_;', '<3', '٩(ˊᗜˋ*)و ♡', '(•‿•)', '(*^‿^*)', '（＾_＾）', '(✿◠‿◠)', '( ｡ •̀ ᴖ •́ ｡)', 'ʕ•ᴥ•ʔ', '(づ｡◕‿‿◕｡)づ', '૮(˶╥︿╥)ა'];
 
   useEffect(() => {
     fetch(`${SERVER}/messages`).then(r => r.json()).then(setMessages).catch(()=>{});
@@ -31,12 +33,20 @@ export default function Chat({ username, token, onLogout }) {
     });
     socket.on('private_message', (msg) => {
       setPrivateMessages(prev => [...prev, msg]);
+      // Show notification only if message is from another user and not in private chat with them
+      if (msg.from !== username && msg.from !== privateChat) {
+        setNotifications(prev => [...prev, msg]);
+      }
     });
     socket.on('pending_messages', (msgs) => {
       if (msgs.length > 0) {
         setPrivateMessages(prev => [...prev, ...msgs]);
         const senders = [...new Set(msgs.map(m => m.from))].join(', ');
         setPendingNotification(`Masz wiadomości od: ${senders}`);
+        // Also show as notifications popup
+        msgs.forEach(msg => {
+          setNotifications(prev => [...prev, msg]);
+        });
         setTimeout(() => setPendingNotification(null), 5000);
       }
     });
@@ -96,6 +106,10 @@ export default function Chat({ username, token, onLogout }) {
 
   return (
     <div className="chat">
+      <Notification 
+        notifications={notifications} 
+        onClose={() => setNotifications([])} 
+      />
       <div className="chat-panel">
         <div className="header">
           <div>

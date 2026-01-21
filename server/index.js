@@ -134,6 +134,7 @@ io.on('connection', (socket) => {
     const recipientSocket = Object.keys(online).find(id => online[id] === payload.to);
     if (recipientSocket) {
       io.to(recipientSocket).emit('private_message', msg);
+      io.to(recipientSocket).emit('notification', { from, text: payload.text }); // Send notification
       io.to(socket.id).emit('private_message', msg); // also send to sender
     } else {
       // User is offline - save the message for later
