@@ -104,7 +104,18 @@ io.on('connection', (socket) => {
   console.log('connected', socket.id, socket.user && socket.user.username);
   if (socket.user && socket.user.username) {
     online[socket.id] = socket.user.username;
-    io.emit('users', Object.values(online));
+    const allUsers = db.getUsers().map(u => ({
+      username: u.username,
+      online: Object.values(online).includes(u.username)
+    }));
+    io.emit('users', allUsers);
+    
+    // Send pending messages to the user
+    const pendingMessages = db.getPendingMessages(socket.user.username);
+    if (pendingMessages.length > 0) {
+      socket.emit('pending_messages', pendingMessages);
+      db.clearPendingMessages(socket.user.username);
+    }
   }
 
   socket.on('message', (payload) => {
@@ -118,18 +129,27 @@ io.on('connection', (socket) => {
     if (!payload || !payload.to || !payload.text) return;
     const from = socket.user && socket.user.username;
     if (!from) return;
-    const msg = { id: Date.now(), from, to: payload.to, text: payload.text, time: new Date().toISOString() };
+    const msg = { id: Date.now() + Math.random().toString(36).slice(2, 9), from, to: payload.to, text: payload.text, time: new Date().toISOString() };
     // Find socket of recipient
     const recipientSocket = Object.keys(online).find(id => online[id] === payload.to);
     if (recipientSocket) {
       io.to(recipientSocket).emit('private_message', msg);
       io.to(socket.id).emit('private_message', msg); // also send to sender
+    } else {
+      // User is offline - save the message for later
+      db.addPendingMessage({ to: payload.to, from, text: payload.text });
+      // Still send confirmation to sender
+      io.to(socket.id).emit('private_message', msg);
     }
   });
 
   socket.on('disconnect', () => {
     delete online[socket.id];
-    io.emit('users', Object.values(online));
+    const allUsers = db.getUsers().map(u => ({
+      username: u.username,
+      online: Object.values(online).includes(u.username)
+    }));
+    io.emit('users', allUsers);
     console.log('disconnected', socket.id);
   });
 });

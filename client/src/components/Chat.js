@@ -12,6 +12,7 @@ export default function Chat({ username, token, onLogout }) {
   const [showKaomojis, setShowKaomojis] = useState(false);
   const [privateChat, setPrivateChat] = useState(null); // username for private chat
   const [privateMessages, setPrivateMessages] = useState([]);
+  const [pendingNotification, setPendingNotification] = useState(null);
   const socketRef = useRef(null);
   const listRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -30,6 +31,14 @@ export default function Chat({ username, token, onLogout }) {
     });
     socket.on('private_message', (msg) => {
       setPrivateMessages(prev => [...prev, msg]);
+    });
+    socket.on('pending_messages', (msgs) => {
+      if (msgs.length > 0) {
+        setPrivateMessages(prev => [...prev, ...msgs]);
+        const senders = [...new Set(msgs.map(m => m.from))].join(', ');
+        setPendingNotification(`Masz wiadomości od: ${senders}`);
+        setTimeout(() => setPendingNotification(null), 5000);
+      }
     });
     socket.on('users', (u) => setUsers(u));
     socket.on('connect_error', (err) => {
@@ -89,7 +98,10 @@ export default function Chat({ username, token, onLogout }) {
     <div className="chat">
       <div className="chat-panel">
         <div className="header">
-          <div>Zalogowany jako: <b>{username}</b> {privateChat ? ` - Prywatny z ${privateChat}` : ' - Ogólny'} &lt;3 (^_^)</div>
+          <div>
+            {pendingNotification && <div style={{color: '#ff6b6b', fontWeight: 'bold', marginBottom: 8}}>📬 {pendingNotification}</div>}
+            <div>Zalogowany jako: <b>{username}</b> {privateChat ? ` - Prywatny z ${privateChat}` : ' - Ogólny'} &lt;3 (^_^)</div>
+          </div>
           <div>{onLogout && <button className="btn secondary" onClick={onLogout}>Wyloguj ;_;</button>}</div>
         </div>
         <div ref={listRef} className="messages">
@@ -118,13 +130,13 @@ export default function Chat({ username, token, onLogout }) {
 
       <div className="sidebar">
         <div className="card">
-          <h4>Online</h4>
+          <h4>Użytkownicy</h4>
           <ul className="online-list">
             {users.map((u, i) => (
               <li key={i}>
-                {u}
-                {u !== username && <button onClick={() => setPrivateChat(u)}>Prywatny</button>}
-                {privateChat === u && <button onClick={() => setPrivateChat(null)}>Ogólny</button>}
+                <span>{u.username} {u.online ? '🟢' : '⚫'}</span>
+                {u.username !== username && <button onClick={() => setPrivateChat(u.username)}>Prywatny</button>}
+                {privateChat === u.username && <button onClick={() => setPrivateChat(null)}>Ogólny</button>}
               </li>
             ))}
           </ul>
