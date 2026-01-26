@@ -166,7 +166,7 @@ export default function Chat({ username, token, onLogout }) {
           <ul className="online-list">
             {users.map((u, i) => (
               <li key={i}>
-                <span>{u.username} {u.online ? '🟢' : '⚫'}</span>
+                <span>{u.username} <span className={`status-indicator ${u.online ? 'online' : 'offline'}`}></span></span>
                 {u.username !== username && <button onClick={() => setPrivateChat(u.username)}>Prywatny</button>}
                 {privateChat === u.username && <button onClick={() => setPrivateChat(null)}>Ogólny</button>}
               </li>

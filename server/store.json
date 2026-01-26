@@ -253,6 +253,12 @@
       "username": "xd",
       "passwordHash": "$2a$10$CrUkk7WjioHnVdv9z.busewyni2Z86khMaX78dApO9Y/w58tulxAm",
       "createdAt": "2026-01-21T09:09:39.585Z"
+    },
+    {
+      "id": "176941872587212n8up2",
+      "username": "gyutrxedrzs",
+      "passwordHash": "$2a$10$JkK6f/P.iHwziG/FVN75KeEm6ViCP3El9JZICsqE0EmsIl3Mb19X2",
+      "createdAt": "2026-01-26T09:12:05.872Z"
     }
   ],
   "pendingMessages": []
